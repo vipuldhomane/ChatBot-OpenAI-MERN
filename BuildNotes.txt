@@ -1,0 +1,46 @@
+// Creating a backend
+
+    created an express server 
+
+****connected to the online atlas DB using mongoose the connection code is in the connection.ts file 
+    connected to DB using fun connect and disconnect for security of the application so that if anything goes wrong the app get disconnected.
+    created two fun for connect and disconnect.
+    then in the main file called that fun and after that promise is completed only then our app will listen on the port.
+
+
+****Working on the openAI keys and setup
+    Created the api keys
+
+**** Morgan 
+    used for the logs to keep the track of usage
+
+**** routing 
+    set up the routing for api 
+    using the express Router()
+    created routes for user and chats and imported in main router file
+
+****Setting up the database and connection
+    create a schema of user and chats
+    based on schema create the route controllers 
+    read the data and create the user
+
+****Middlewares
+    its a fun which gets executed before the request is process. mostly it is used to validate the data before sending it to the server
+    bad data can crash the server and might cause the errors
+    Authentication is also a middleware which process the req only is Authentication fun allows to go further
+    
+**** API Creation & Data validation
+    Created the apis for the user routes 
+    used the express-validator package to validate and sanitize the incoming data entered by the user
+
+**** Authentication
+    using jwt Authentication from jsonwebtoken lib
+    created a token then setting that token inside of the cookie while login and signup
+    
+
+
+
+********************FrontEnd*************************
+
+
+key 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
