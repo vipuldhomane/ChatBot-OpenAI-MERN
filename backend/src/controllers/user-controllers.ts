@@ -127,3 +127,27 @@ export const userLogIn = async (
     return res.status(200).json({ message: "ERROR", cause: err.message });
   }
 };
+
+// Check if the cookies exits if yes then login on refresh
+export const verifyUser = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    // check if cookies exits
+    const user = await User.findById(res.locals.jwtData.id);
+    if (!user) {
+      return res.status(401).send("User not Registered of Token malfunctioned");
+    }
+    if (user._id.toString() !== res.locals.jwtData.id) {
+      return res.status(401).send("Permissions didn't match");
+    }
+    return res
+      .status(200)
+      .json({ message: "Ok", email: user.email, name: user.name });
+  } catch (err) {
+    console.log(err);
+    return res.status(200).json({ message: "ERROR", cause: err.message });
+  }
+};
