@@ -1,11 +1,11 @@
 import { Box, Button, Typography } from "@mui/material";
 import { IoIosLogIn } from "react-icons/io";
 import CustomizedInputs from "../components/shared/CustomizedInputs";
-import { UserAuth } from "../context/AuthContext";
+import { UseAuth } from "../context/AuthContext";
 import toast from "react-hot-toast";
 const Login = () => {
   // using contextAPI
-  const auth = UserAuth();
+  const auth = UseAuth();
 
   // Action on form submit. Parse the form data and set it into the state
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {

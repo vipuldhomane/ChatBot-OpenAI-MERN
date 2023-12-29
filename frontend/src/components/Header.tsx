@@ -1,11 +1,11 @@
 import React from "react";
 import { AppBar, Toolbar } from "@mui/material";
 import { Logo } from "./shared/Logo";
-import { UserAuth } from "../context/AuthContext";
+import { UseAuth } from "../context/AuthContext";
 import NavigationLink from "./shared/NavigationLink";
 
 const Header = () => {
-  const auth = UserAuth();
+  const auth = UseAuth();
   return (
     <div>
       <AppBar

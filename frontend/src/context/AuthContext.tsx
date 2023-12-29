@@ -67,4 +67,4 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };
 
-export const UserAuth = () => useContext(AuthContext);
+export const UseAuth = () => useContext(AuthContext);
