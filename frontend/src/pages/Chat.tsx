@@ -3,7 +3,7 @@ import { UseAuth } from "../context/AuthContext";
 import { red } from "@mui/material/colors";
 import ChatItem from "../components/chat/ChatItem";
 import { IoMdSend } from "react-icons/io";
-import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   clearConversation,
   getUserChats,
@@ -25,12 +25,17 @@ const Chat = () => {
   const [chatMessages, setChatMessages] = useState<Message[]>([]);
   // import the context of auth
   const auth = UseAuth();
+  console.log(auth);
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     if (auth?.isLoggedIn && auth.user) {
       toast.loading("Loading Chats,", { id: "loadchats" });
+      console.log("inside layout effect");
+
       getUserChats()
         .then((data) => {
+          console.log(data);
+
           setChatMessages([...data.chats]);
           toast.success("Successfully loaded Chats,", { id: "loadchats" });
         })
