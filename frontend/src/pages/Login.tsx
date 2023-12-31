@@ -3,9 +3,12 @@ import { IoIosLogIn } from "react-icons/io";
 import CustomizedInputs from "../components/shared/CustomizedInputs";
 import { UseAuth } from "../context/AuthContext";
 import toast from "react-hot-toast";
+import { useNavigate } from "react-router-dom";
+import { useEffect } from "react";
 const Login = () => {
   // using contextAPI
   const auth = UseAuth();
+  const navigate = useNavigate();
 
   // Action on form submit. Parse the form data and set it into the state
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -23,6 +26,12 @@ const Login = () => {
       toast.error("error in login", { id: "login" });
     }
   };
+
+  useEffect(() => {
+    if (auth?.user) {
+      return navigate("/chat");
+    }
+  }, [auth]);
 
   return (
     <Box width={"100%"} height={"100%"} display="flex" flex={1}>

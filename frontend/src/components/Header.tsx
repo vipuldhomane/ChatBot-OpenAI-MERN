@@ -1,8 +1,9 @@
 import React from "react";
 import { AppBar, Toolbar } from "@mui/material";
 import { Logo } from "./shared/Logo";
-import { UseAuth } from "../context/AuthContext";
+
 import NavigationLink from "./shared/NavigationLink";
+import { UseAuth } from "../context/AuthContext";
 
 const Header = () => {
   const auth = UseAuth();
@@ -26,7 +27,7 @@ const Header = () => {
               <>
                 <NavigationLink
                   bg="#00fffc"
-                  text="Go To Chat"
+                  text="Chat"
                   textColor="black"
                   to="/chat"
                 />

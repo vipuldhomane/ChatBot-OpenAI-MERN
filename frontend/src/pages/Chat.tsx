@@ -3,31 +3,43 @@ import { UseAuth } from "../context/AuthContext";
 import { red } from "@mui/material/colors";
 import ChatItem from "../components/chat/ChatItem";
 import { IoMdSend } from "react-icons/io";
-import { useRef, useState } from "react";
-import { sendChatRequest } from "../helpers/api-communicator";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import {
+  clearConversation,
+  getUserChats,
+  sendChatRequest,
+} from "../helpers/api-communicator";
+import toast from "react-hot-toast";
 
-// const staticChats = [
-//   { role: "User", content: "Hello there!" },
-//   { role: "Assistant", content: "Hi! How can I assist you today?" },
-//   { role: "User", content: "I need help with a programming issue." },
-//   {
-//     role: "Assistant",
-//     content: `Sure, I'll do my best to help. What seems to be the problem? `,
-//   },
-//   { role: "User", content: `I'm getting an error message that says...` },
-//   { role: "Assistant", content: "That error usually indicates..." },
-//   // Add more conversations as needed
-// ];
+import { useNavigate } from "react-router-dom";
+
 type Message = {
   role: "user" | "assistant";
   content: string | undefined;
 };
 
 const Chat = () => {
+  const navigate = useNavigate();
   const inputRef = useRef<HTMLInputElement | null>(null);
+  const chatBoxRef = useRef<HTMLInputElement | null>(null);
   const [chatMessages, setChatMessages] = useState<Message[]>([]);
   // import the context of auth
   const auth = UseAuth();
+
+  useLayoutEffect(() => {
+    if (auth?.isLoggedIn && auth.user) {
+      toast.loading("Loading Chats,", { id: "loadchats" });
+      getUserChats()
+        .then((data) => {
+          setChatMessages([...data.chats]);
+          toast.success("Successfully loaded Chats,", { id: "loadchats" });
+        })
+        .catch((error) => {
+          console.log(error);
+          toast.error("Loading Failed", { id: "loadchats" });
+        });
+    }
+  }, [auth]);
 
   const handleSubmit = async () => {
     const content = inputRef.current?.value as string;
@@ -42,6 +54,30 @@ const Chat = () => {
     setChatMessages([...chatData.chats]);
   };
 
+  const handleClearConversation = async () => {
+    try {
+      toast.loading("Deleting Chats,", { id: "deletechats" });
+      await clearConversation();
+      setChatMessages([]);
+      toast.success("Chats deleted successfully,", { id: "deletechats" });
+    } catch (error) {
+      console.log(error);
+      toast.error("Error in Deleting Chats,", { id: "deletechats" });
+    }
+  };
+
+  useEffect(() => {
+    if (!auth?.user) {
+      return navigate("/login");
+    }
+  }, [auth]);
+
+  useEffect(() => {
+    // Scroll to the bottom when messages change
+    if (chatBoxRef.current) {
+      chatBoxRef.current.scrollTop = chatBoxRef.current.scrollHeight;
+    }
+  }, [chatMessages]);
   return (
     // the parent div
     <Box
@@ -64,9 +100,11 @@ const Chat = () => {
       >
         <Box
           sx={{
+            border: "2px solid gray",
             display: "flex",
+            height: "auto",
             width: "100%",
-            height: "60vh",
+            // height: "60vh",
             bgcolor: "rgb(17, 29, 39)",
             borderRadius: 5,
             flexDirection: "column",
@@ -118,6 +156,7 @@ const Chat = () => {
                 bgcolor: red[800],
               },
             }}
+            onClick={handleClearConversation}
           >
             Clear Conversation
           </Button>
@@ -130,9 +169,11 @@ const Chat = () => {
           flexDirection: "column",
           px: 3,
           height: "80vh",
+          maxWidth: "80vw",
         }}
       >
         <Box
+          ref={chatBoxRef}
           sx={{
             width: "100%",
             height: "75vh",
@@ -145,6 +186,8 @@ const Chat = () => {
             overflowY: "auto",
             scrollBehavior: "smooth",
           }}
+          className="syntax-highlighted-element"
+          style={{ overflowX: "auto", whiteSpace: "pre-wrap" }}
         >
           {chatMessages.map((chat, index) => (
             //@ts-expect-error for the role
@@ -164,6 +207,7 @@ const Chat = () => {
             ref={inputRef}
             type="text"
             required
+            placeholder="Explore your Curiosity !!!!"
             style={{
               width: "100%",
               backgroundColor: "transparent",
@@ -174,7 +218,10 @@ const Chat = () => {
               fontSize: "20px",
             }}
           />
-          <IconButton onClick={handleSubmit} sx={{ color: "white", mx: 1 }}>
+          <IconButton
+            onClick={handleSubmit}
+            sx={{ color: "white", mx: 1, width: "auto" }}
+          >
             <IoMdSend />
           </IconButton>
         </div>
