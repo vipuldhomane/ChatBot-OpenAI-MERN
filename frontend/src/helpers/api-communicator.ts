@@ -42,7 +42,9 @@ export const sendChatRequest = async (message: string) => {
 };
 // Get the chats of user
 export const getUserChats = async () => {
-  const res = await axios.get("/chat/all-chats");
+  const res = await axios.post("/chat/all-chats", {
+    token: JSON.parse(localStorage.getItem("token")),
+  });
   if (res.status !== 200) {
     throw new Error("Unable to send chat");
   }

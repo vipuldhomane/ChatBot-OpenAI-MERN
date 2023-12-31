@@ -7,7 +7,8 @@ const chatRouter = Router();
 // /api/v1/chat/new
 chatRouter.post("/new", validate(chatCompletionValidator), verifyToken, generateChatCompletion);
 // /api/v1/chat/all-chats
-chatRouter.get("/all-chats", verifyToken, sendChatsToUser);
+// chatRouter.get("/all-chats", verifyToken, sendChatsToUser);
+chatRouter.post("/all-chats", sendChatsToUser);
 // /api/v1/chat/delete-chats
 chatRouter.delete("/delete", verifyToken, deleteChats);
 export default chatRouter;

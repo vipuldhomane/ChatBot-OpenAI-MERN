@@ -2,6 +2,7 @@ import { NextFunction, Request, Response } from "express";
 import User from "../models/Users.js";
 import { configureOpenAI } from "../config/openai-config.js";
 import { ChatCompletionRequestMessage, OpenAIApi } from "openai";
+import jwt from "jsonwebtoken";
 
 export const generateChatCompletion = async (
   req: Request,
@@ -69,22 +70,27 @@ export const deleteChats = async (
     return res.status(200).json({ message: "ERROR", cause: err.message });
   }
 };
-export const sendChatsToUser = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
+export const sendChatsToUser = async (req: Request, res: Response) => {
   try {
     // check if cookies exits
-    const user = await User.findById(res.locals.jwtData.id);
-    if (!user) {
-      return res.status(401).send("User not Registered of Token malfunctioned");
-    }
-    if (user._id.toString() !== res.locals.jwtData.id) {
+    const { token } = req.body;
+    if (token) {
+      const jwtData = jwt.verify(token, process.env.JWT_SECRET);
+
+      const user = await User.findById(jwtData?.id);
+      if (!user) {
+        return res
+          .status(401)
+          .send("User not Registered of Token malfunctioned");
+      }
+      if (user._id.toString() !== jwtData?.id) {
+        return res.status(401).send("Permissions didn't match");
+      }
+      // send the chats to user
+      return res.status(200).json({ message: "Ok", chats: user.chats });
+    } else {
       return res.status(401).send("Permissions didn't match");
     }
-    // send the chats to user
-    return res.status(200).json({ message: "Ok", chats: user.chats });
   } catch (err) {
     console.log(err);
     return res.status(200).json({ message: "ERROR", cause: err.message });

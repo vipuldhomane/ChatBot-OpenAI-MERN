@@ -50,9 +50,12 @@ export const userSignUp = async (req, res, next) => {
             expires,
             signed: true,
         });
-        return res
-            .status(200)
-            .json({ message: "Ok", email: user.email, name: user.name });
+        return res.status(200).json({
+            message: "Ok",
+            email: user.email,
+            name: user.name,
+            token: token,
+        });
     }
     catch (err) {
         console.log(err);
@@ -95,7 +98,12 @@ export const userLogIn = async (req, res, next) => {
         });
         return res
             .status(200)
-            .json({ message: "Ok", email: user.email, name: user.name });
+            .json({
+            message: "Ok",
+            email: user.email,
+            name: user.name,
+            token: token,
+        });
     }
     catch (err) {
         console.log(err);
