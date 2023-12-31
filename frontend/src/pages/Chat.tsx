@@ -27,6 +27,22 @@ const Chat = () => {
   const auth = UseAuth();
   console.log(auth);
 
+  if (localStorage.getItem("token")) {
+    toast.loading("Loading Chats,", { id: "loadchats" });
+    console.log("inside layout effect");
+
+    getUserChats()
+      .then((data) => {
+        console.log(data);
+
+        setChatMessages([...data.chats]);
+        toast.success("Successfully loaded Chats,", { id: "loadchats" });
+      })
+      .catch((error) => {
+        console.log(error);
+        toast.error("Loading Failed", { id: "loadchats" });
+      });
+  }
   useEffect(() => {
     if (auth?.isLoggedIn && auth.user) {
       toast.loading("Loading Chats,", { id: "loadchats" });
