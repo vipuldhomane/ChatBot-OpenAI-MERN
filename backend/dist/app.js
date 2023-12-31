@@ -7,7 +7,12 @@ import cors from "cors";
 //SetUp env file access
 config();
 const app = express();
-app.use(cors({ origin: "http://localhost:3000", credentials: true }));
+// app.use(cors({ origin: "http://localhost:3000", credentials: true }));
+app.use(cors({
+    // origin: "https://smarty-openai-chatbot.vercel.app",
+    origin: "*",
+    credentials: true,
+}));
 // Middlewares
 app.use(express.json());
 //morgan Remove in Production
