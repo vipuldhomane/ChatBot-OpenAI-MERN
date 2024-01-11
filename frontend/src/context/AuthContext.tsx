@@ -79,7 +79,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     localStorage.clear();
     setIsLoggedIn(false);
     setUser(null);
-    window.location.reload();
+    // window.location.reload();
   };
 
   const value = {
